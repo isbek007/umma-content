@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UMMA BAR — Контент-план</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:      #f5f4f0;
+  --bg2:     #edecea;
+  --bg3:     #e4e2de;
+  --surface: #ffffff;
+  --border:  #dddbd6;
+  --border2: #c8c5bf;
+  --text:    #1a1917;
+  --text2:   #6b6860;
+  --text3:   #a09d97;
+  --today:   #c8392b;
+  --green:   #1d7a48;
+  --s-bg:#eeeaff; --s-c:#4b35b8;
+  --f-bg:#e4f5ea; --f-c:#1a6634;
+  --p-bg:#fff2d8; --p-c:#9a5700;
+  --r-bg:#fce4f0; --r-c:#aa1a5a;
+  --ref-bg:#e8f4ff; --ref-c:#1a5080;
+}
+body { font-family:'Onest',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+
+/* ── TOPBAR ── */
+.topbar {
+  position:sticky; top:0; z-index:100;
+  display:flex; align-items:center; gap:12px;
+  padding:10px 16px; background:var(--surface);
+  border-bottom:1px solid var(--border); flex-wrap:wrap;
+}
+.logo-sq {
+  width:34px; height:34px; border:2px solid var(--text);
+  border-radius:9px; display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.brand-name { font-size:14px; font-weight:600; letter-spacing:0.08em; }
+.brand-sub  { font-size:10px; color:var(--text3); letter-spacing:0.1em; }
+.filters { display:flex; gap:4px; flex-wrap:wrap; margin-left:auto; }
+.ftag {
+  font-size:11px; padding:5px 11px; border-radius:20px;
+  border:1px solid var(--border2); background:transparent;
+  color:var(--text2); cursor:pointer; font-family:inherit; transition:all .15s;
+}
+.ftag.on { background:var(--text); color:#fff; border-color:var(--text); }
+.ftag:hover:not(.on) { background:var(--bg2); }
+
+/* ── NAV ── */
+.nav-row {
+  display:flex; align-items:center; gap:8px;
+  padding:8px 16px; background:var(--surface);
+  border-bottom:1px solid var(--border); flex-wrap:wrap;
+}
+.nbtn {
+  width:28px; height:28px; border-radius:7px;
+  border:1px solid var(--border2); background:transparent;
+  color:var(--text); cursor:pointer; font-size:15px;
+  display:flex; align-items:center; justify-content:center; font-family:inherit;
+  flex-shrink:0;
+}
+.nbtn:hover { background:var(--bg2); }
+.period { font-size:12px; font-weight:500; color:var(--text); }
+.today-btn {
+  font-size:11px; padding:4px 10px; border-radius:7px;
+  border:1px solid var(--border2); background:transparent;
+  color:var(--text2); cursor:pointer; font-family:inherit; transition:all .15s;
+}
+.today-btn:hover { background:var(--bg2); border-color:var(--text); color:var(--text); }
+.stats { display:flex; gap:14px; margin-left:auto; flex-wrap:wrap; }
+.stat { font-size:11px; color:var(--text3); white-space:nowrap; }
+.stat b { color:var(--text); font-weight:500; }
+.stat b.g { color:var(--green); }
+
+/* ── SYNC ── */
+.sync-bar {
+  display:flex; align-items:center; gap:8px;
+  padding:5px 16px; background:var(--bg2);
+  border-bottom:1px solid var(--border);
+  font-size:11px; color:var(--text3);
+}
+.sdot { width:6px; height:6px; border-radius:50%; background:var(--green); flex-shrink:0; animation:pulse 2s infinite; }
+.sdot.err  { background:var(--today); animation:none; }
+.sdot.spin { background:#f0a500; animation:pulse .7s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+.sync-btn {
+  margin-left:auto; font-size:11px; padding:3px 10px;
+  border-radius:5px; border:1px solid var(--border2);
+  background:var(--surface); cursor:pointer; font-family:inherit; color:var(--text2);
+}
+.sync-btn:hover { background:var(--bg3); }
+
+/* ── BOARD WRAPPER ── */
+.board-wrap { overflow-x:auto; padding:12px 16px 32px; }
+.board-wrap::-webkit-scrollbar { height:5px; }
+.board-wrap::-webkit-scrollbar-thumb { background:var(--border2); border-radius:3px; }
+
+/* ── 2-WEEK GRID ── */
+.two-week { display:flex; flex-direction:column; gap:0; }
+.week-row { display:flex; gap:10px; padding-bottom:12px; margin-bottom:12px; border-bottom:1px solid var(--border); min-width:max-content; }
+.week-row:last-child { border-bottom:none; margin-bottom:0; padding-bottom:0; }
+.week-label {
+  writing-mode:vertical-rl; text-orientation:mixed;
+  font-size:9px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase;
+  color:var(--text3); padding:0 4px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+}
+
+/* ── DAY COLUMN ── */
+.dcol { width:220px; flex-shrink:0; }
+.dhead {
+  display:flex; align-items:baseline; gap:6px;
+  padding-bottom:8px; margin-bottom:8px;
+  border-bottom:2px solid var(--text);
+}
+.dhead.today-h { border-bottom-color:var(--today); }
+.dnum { font-size:20px; font-weight:600; line-height:1; }
+.dhead.today-h .dnum { color:var(--today); }
+.ddow { font-size:11px; color:var(--text3); letter-spacing:0.08em; text-transform:uppercase; }
+.dcnt { margin-left:auto; font-size:10px; color:var(--text3); }
+
+/* ── CARD ── */
+.card {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:11px; padding:10px 11px 9px; margin-bottom:8px;
+  transition:border-color .12s, box-shadow .12s;
+}
+.card:hover { border-color:var(--border2); box-shadow:0 2px 8px rgba(0,0,0,.06); }
+.card.done { opacity:.35; }
+.badge {
+  display:inline-block; font-size:9px; padding:2px 7px;
+  border-radius:4px; font-weight:500; letter-spacing:0.05em; margin-bottom:6px;
+}
+.b-s{background:var(--s-bg);color:var(--s-c);}
+.b-f{background:var(--f-bg);color:var(--f-c);}
+.b-p{background:var(--p-bg);color:var(--p-c);}
+.b-r{background:var(--r-bg);color:var(--r-c);}
+.card-title { font-size:12px; font-weight:500; color:var(--text); line-height:1.45; margin-bottom:8px; }
+
+/* ── SECTIONS ── */
+.section { margin-bottom:6px; }
+.sec-label {
+  font-size:9px; font-weight:600; letter-spacing:0.1em;
+  text-transform:uppercase; color:var(--text3); margin-bottom:3px;
+}
+.sec-content { font-size:11px; color:var(--text); line-height:1.5; padding:5px 8px; background:var(--bg2); border-radius:6px; }
+.sec-promo   { font-size:11px; color:var(--p-c); line-height:1.5; padding:5px 8px; background:var(--p-bg); border-radius:6px; }
+.sec-ref     { font-size:10px; color:var(--ref-c); line-height:1.4; padding:5px 8px; background:var(--ref-bg); border-radius:6px; word-break:break-all; }
+.sec-ref a   { color:var(--ref-c); text-decoration:underline; text-underline-offset:2px; }
+.sec-prop    { font-size:10px; color:var(--text2); line-height:1.4; padding:5px 8px; background:var(--bg2); border-radius:6px; border-left:2px solid var(--border2); }
+.divider { height:1px; background:var(--border); margin:7px 0; }
+
+/* ── CHECKBOXES ── */
+.checks { display:flex; flex-direction:column; gap:3px; }
+.chk { display:flex; align-items:center; gap:7px; cursor:pointer; padding:2px 0; user-select:none; }
+.chk:hover .chk-box { border-color:var(--text); }
+.chk-box {
+  width:14px; height:14px; border-radius:3px;
+  border:1.5px solid var(--border2);
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0; transition:all .12s;
+}
+.chk-box.on { background:var(--text); border-color:var(--text); }
+.chk.saving .chk-box { opacity:.4; pointer-events:none; }
+.chk-lbl  { font-size:10px; color:var(--text2); flex:1; }
+.chk-role { font-size:9px; color:var(--text3); flex-shrink:0; }
+
+/* ── STATES ── */
+.empty-col { font-size:11px; color:var(--text3); text-align:center; padding:16px 0; }
+.state-screen { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px 20px; gap:12px; }
+.spinner { width:22px; height:22px; border:2px solid var(--border2); border-top-color:var(--text); border-radius:50%; animation:spin .7s linear infinite; }
+@keyframes spin { to{transform:rotate(360deg);} }
+.state-txt { font-size:12px; color:var(--text3); }
+
+/* ── MOBILE ── */
+@media (max-width: 768px) {
+  .topbar { padding:8px 12px; gap:8px; }
+  .brand-sub { display:none; }
+  .filters { gap:3px; }
+  .ftag { font-size:10px; padding:4px 8px; }
+
+  .nav-row { padding:7px 12px; gap:6px; }
+  .stats { gap:8px; }
+  .stat { font-size:10px; }
+
+  .sync-bar { padding:5px 12px; }
+
+  .board-wrap { padding:10px 12px 24px; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+
+  .week-row { gap:8px; }
+  .dcol { width:180px; }
+  .dnum { font-size:17px; }
+  .card { padding:8px 9px 8px; }
+  .card-title { font-size:11px; }
+  .sec-content, .sec-promo { font-size:10px; }
+  .week-label { display:none; }
+}
+
+@media (max-width: 480px) {
+  .topbar { padding:8px 10px; }
+  .brand-name { font-size:13px; }
+  .logo-sq { width:30px; height:30px; }
+  .filters { order:3; width:100%; }
+  .ftag { flex:1; text-align:center; }
+
+  .period { font-size:11px; }
+  .stats { display:none; }
+
+  .dcol { width:160px; }
+  .badge { font-size:8px; padding:2px 5px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo-sq">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+      <path d="M4 5C4 5 4 11 8 11C12 11 12 5 12 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M12 5L12 11" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M12 5C12 5 12 11 16 11C20 11 20 5 20 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M4 13L8 19L12 13" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M12 13V19" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M20 13V19M16 15.5H20M16 18.5H19" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <div>
+    <div class="brand-name">UMMA BAR</div>
+    <div class="brand-sub">КОНТЕНТ-ПЛАН МАЙ 2026</div>
+  </div>
+  <div class="filters">
+    <button class="ftag on" onclick="setF('all',this)">Все</button>
+    <button class="ftag"    onclick="setF('story',this)">Истории</button>
+    <button class="ftag"    onclick="setF('feed',this)">Лента</button>
+    <button class="ftag"    onclick="setF('promo',this)">Акции</button>
+    <button class="ftag"    onclick="setF('reel',this)">Reels</button>
+  </div>
+</div>
+
+<div class="nav-row">
+  <button class="nbtn" onclick="shiftPeriod(-1)">‹</button>
+  <div class="period" id="period">—</div>
+  <button class="nbtn" onclick="shiftPeriod(1)">›</button>
+  <button class="today-btn" onclick="goToday()">Сегодня</button>
+  <div class="stats">
+    <div class="stat">Всего: <b id="st0">—</b></div>
+    <div class="stat">Готово: <b class="g" id="st1">—</b></div>
+    <div class="stat">Прогресс: <b id="st2">—</b></div>
+  </div>
+</div>
+
+<div class="sync-bar">
+  <div class="sdot spin" id="sdot"></div>
+  <span id="stxt">Подключение...</span>
+  <button class="sync-btn" onclick="loadData()">↻ Обновить</button>
+</div>
+
+<div class="board-wrap" id="board-wrap">
+  <div class="state-screen">
+    <div class="spinner"></div>
+    <div class="state-txt">Загрузка данных из Google Sheets...</div>
+  </div>
+</div>
+
+<script>
+const API  = 'https://script.google.com/macros/s/AKfycbyJqrrrJ-aUc3709xgA8uO7Fq28bPvH5EnS6FiaTZYhlASzfgl9W3A4JonWIm8YA0E/exec';
+const MR   = ['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'];
+const MRFULL = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+const DW   = ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
+const TICK = `<svg width="9" height="8" viewBox="0 0 9 8" fill="none"><path d="M1 3.5L3.5 6.5L8 1" stroke="white" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+const CHECKS = {
+  story: [
+    {key:'m_text',     lbl:'Текст сторис', role:'СММ'},
+    {key:'m_scenario', lbl:'Сценарий',      role:'СММ'},
+    {key:'o_shot',     lbl:'Снято',         role:'Оп.'},
+    {key:'o_edited',   lbl:'Обработано',    role:'Оп.'},
+    {key:'c_ready',    lbl:'Готово',         role:'КМ'},
+  ],
+  feed: [
+    {key:'m_text',      lbl:'Текст',        role:'СММ'},
+    {key:'o_shot',      lbl:'Снято',        role:'Оп.'},
+    {key:'o_edited',    lbl:'Обработано',   role:'Оп.'},
+    {key:'c_formatted', lbl:'Оформлено',    role:'КМ'},
+    {key:'c_captions',  lbl:'Подписи',      role:'КМ'},
+    {key:'c_ready',     lbl:'Готово',        role:'КМ'},
+  ],
+  promo: [
+    {key:'m_text',  lbl:'Текст акции', role:'Sales'},
+    {key:'c_ready', lbl:'Готово',       role:'КМ'},
+  ],
+  reel: [
+    {key:'m_scenario', lbl:'Сценарий',     role:'СММ'},
+    {key:'o_shot',     lbl:'Снято',        role:'Оп.'},
+    {key:'o_edited',   lbl:'Смонтировано', role:'Оп.'},
+    {key:'c_ready',    lbl:'Готово',        role:'КМ'},
+  ],
+};
+
+function typeKey(fmt) {
+  if (!fmt) return 'story';
+  const f = fmt.toLowerCase();
+  if (f.includes('акция'))                          return 'promo';
+  if (f.includes('reels') || f.includes('рилс'))    return 'reel';
+  if (f.includes('пост') || f.includes('карусел'))  return 'feed';
+  return 'story';
+}
+function badgeCls(fmt) {
+  return {promo:'b-p',reel:'b-r',feed:'b-f',story:'b-s'}[typeKey(fmt)]||'b-s';
+}
+function parseDate(raw) {
+  if (!raw) return '';
+  const d = new Date(raw);
+  if (!isNaN(d)) return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  const s = String(raw).trim(), parts = s.split('.');
+  if (parts.length >= 2) return `2026-${parts[1].padStart(2,'0')}-${parts[0].padStart(2,'0')}`;
+  return s;
+}
+function isUrl(s) { return /^https?:\/\//i.test((s||'').trim()); }
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+}
+function nowStr() { const d=new Date(); return d.getHours()+':'+String(d.getMinutes()).padStart(2,'0'); }
+function ds(d) { return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function todayS() { return ds(new Date()); }
+
+// periodOff — смещение в двухнедельных блоках (0 = текущие 2 недели)
+let tasks=[], checks={}, activeF='all', periodOff=0, saving={};
+
+function syncUI(cls,txt) {
+  document.getElementById('sdot').className='sdot'+(cls?' '+cls:'');
+  document.getElementById('stxt').textContent=txt;
+}
+
+// Возвращает понедельник текущей недели
+function currentMonday() {
+  const now=new Date(), dow=now.getDay()||7;
+  const mon=new Date(now);
+  mon.setDate(now.getDate()-dow+1);
+  mon.setHours(0,0,0,0);
+  return mon;
+}
+
+// Возвращает 14 дней для текущего периода
+function periodDates() {
+  const base = currentMonday();
+  base.setDate(base.getDate() + periodOff * 14);
+  return Array.from({length:14}, (_,i)=>{
+    const d=new Date(base); d.setDate(base.getDate()+i); return d;
+  });
+}
+
+// Разбиваем 14 дней на 2 недели по 7
+function twoWeeks() {
+  const all = periodDates();
+  return [all.slice(0,7), all.slice(7,14)];
+}
+
+async function loadData() {
+  syncUI('spin','Загрузка...');
+  try {
+    const r = await fetch(API+'?t='+Date.now());
+    const j = await r.json();
+    if (j.ok) {
+      tasks  = (j.tasks||[]).map(t=>({...t, date:parseDate(t.date)}));
+      checks = j.checks||{};
+      syncUI('','Синхронизировано · '+nowStr());
+    } else {
+      syncUI('err','Ошибка: '+j.error);
+    }
+  } catch(e) {
+    syncUI('err','Нет соединения');
+  }
+  render();
+}
+
+async function toggleCheck(taskId, key) {
+  const cur=!!(checks[taskId]&&checks[taskId][key]);
+  const val=!cur;
+  if (!checks[taskId]) checks[taskId]={};
+  checks[taskId][key]=val;
+  saving[taskId+'_'+key]=true;
+  render();
+  try {
+    await fetch(API,{method:'POST',body:JSON.stringify({taskId,key,value:val}),headers:{'Content-Type':'application/json'}});
+    syncUI('','Сохранено · '+nowStr());
+  } catch(e) { syncUI('err','Ошибка сохранения'); }
+  delete saving[taskId+'_'+key];
+  render();
+}
+
+function setF(f,el) {
+  activeF=f;
+  document.querySelectorAll('.ftag').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+  render();
+}
+function shiftPeriod(d) { periodOff+=d; render(); }
+function goToday() { periodOff=0; render(); }
+
+function renderDay(day, filtered) {
+  const dateS=ds(day), isT=dateS===todayS();
+  const dayT=filtered.filter(t=>t.date===dateS);
+
+  let cards='';
+  if (!dayT.length) {
+    cards='<div class="empty-col">—</div>';
+  } else {
+    dayT.forEach(t=>{
+      const tk=typeKey(t.fmt), cl=CHECKS[tk]||[];
+      const doneC=cl.filter(c=>checks[t.id]&&checks[t.id][c.key]).length;
+      const allD=cl.length>0&&doneC===cl.length;
+
+      const contentBlock = t.text
+        ? `<div class="section"><div class="sec-label">Контент</div><div class="sec-content">${esc(t.text)}</div></div>` : '';
+      const promoBlock = t.promo
+        ? `<div class="section"><div class="sec-label">Акция</div><div class="sec-promo">🏷 ${esc(t.promo)}</div></div>` : '';
+      let refHtml='';
+      if (t.ref) {
+        const rc=isUrl(t.ref)?`<a href="${t.ref}" target="_blank" rel="noopener">🔗 Открыть референс</a>`:esc(t.ref);
+        refHtml=`<div class="section"><div class="sec-label">Референс</div><div class="sec-ref">${rc}</div></div>`;
+      }
+      const propBlock = t.prop
+        ? `<div class="section"><div class="sec-label">Реквизит</div><div class="sec-prop">${esc(t.prop)}</div></div>` : '';
+      const hasSec=contentBlock||promoBlock||refHtml||propBlock;
+      const chks=cl.map(c=>{
+        const on=!!(checks[t.id]&&checks[t.id][c.key]);
+        const sv=saving[t.id+'_'+c.key];
+        return `<div class="chk${sv?' saving':''}" onclick="toggleCheck(${t.id},'${c.key}')">
+          <div class="chk-box${on?' on':''}">${on?TICK:''}</div>
+          <span class="chk-lbl">${c.lbl}</span>
+          <span class="chk-role">${c.role}</span>
+        </div>`;
+      }).join('');
+
+      cards+=`<div class="card${allD?' done':''}">
+        <span class="badge ${badgeCls(t.fmt)}">${esc(t.fmt)||'—'}</span>
+        <div class="card-title">${esc(t.title)||'—'}</div>
+        ${contentBlock}${promoBlock}${refHtml}${propBlock}
+        ${hasSec&&chks?'<div class="divider"></div>':''}
+        <div class="checks">${chks}</div>
+      </div>`;
+    });
+  }
+
+  return { html:`<div class="dcol">
+    <div class="dhead${isT?' today-h':''}">
+      <div class="dnum">${day.getDate()}.${String(day.getMonth()+1).padStart(2,'0')}</div>
+      <div class="ddow">${DW[day.getDay()]}</div>
+      <div class="dcnt">${dayT.length} зад.</div>
+    </div>
+    ${cards}
+  </div>`, count: dayT.length, done: dayT.filter(t=>{ const cl=CHECKS[typeKey(t.fmt)]||[]; return cl.length>0&&cl.every(c=>checks[t.id]&&checks[t.id][c.key]); }).length };
+}
+
+function render() {
+  const weeks = twoWeeks();
+  const all14 = [...weeks[0], ...weeks[1]];
+  const f=all14[0], l=all14[13];
+
+  // Period label
+  const fm = f.getMonth(), lm = l.getMonth();
+  const label = fm===lm
+    ? `${f.getDate()} — ${l.getDate()} ${MRFULL[fm]} ${l.getFullYear()}`
+    : `${f.getDate()} ${MR[fm]} — ${l.getDate()} ${MR[lm]} ${l.getFullYear()}`;
+  document.getElementById('period').textContent = label;
+
+  const filtered=tasks.filter(t=>activeF==='all'||typeKey(t.fmt)===activeF);
+  let tot=0, dn=0;
+
+  let html='<div class="two-week">';
+  weeks.forEach((week, wi)=>{
+    const wf=week[0], wl=week[6];
+    const wlabel = `Нед ${wi+1}: ${wf.getDate()} ${MR[wf.getMonth()]}`;
+    html+=`<div class="week-row"><div class="week-label">${wlabel}</div>`;
+    week.forEach(day=>{
+      const {html:dayHtml, count, done} = renderDay(day, filtered);
+      tot+=count; dn+=done;
+      html+=dayHtml;
+    });
+    html+='</div>';
+  });
+  html+='</div>';
+
+  document.getElementById('board-wrap').innerHTML=html;
+  document.getElementById('st0').textContent=tot;
+  document.getElementById('st1').textContent=dn;
+  document.getElementById('st2').textContent=tot?Math.round(dn/tot*100)+'%':'0%';
+}
+
+// Стартуем всегда на текущей 2-недельной неделе (periodOff=0)
+loadData();
+setInterval(loadData, 120000);
+</script>
+</body>
+</html>
