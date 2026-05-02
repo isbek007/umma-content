@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UMMA BAR — Контент-план</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:       #f5f4f0;
+  --bg2:      #edecea;
+  --bg3:      #e4e2de;
+  --surface:  #ffffff;
+  --border:   #dddbd6;
+  --border2:  #c8c5bf;
+  --text:     #1a1917;
+  --text2:    #6b6860;
+  --text3:    #a09d97;
+  --accent:   #1a1917;
+  --today:    #c8392b;
+  --green:    #1d7a48;
+  --s-bg:     #eeeaff; --s-c: #4b35b8;
+  --f-bg:     #e4f5ea; --f-c: #1a6634;
+  --p-bg:     #fff2d8; --p-c: #9a5700;
+  --r-bg:     #fce4f0; --r-c: #aa1a5a;
+}
+
+body { font-family: 'Onest', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+/* ── TOPBAR ── */
+.topbar {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; gap: 14px;
+  padding: 11px 20px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.logo-sq {
+  width: 36px; height: 36px;
+  border: 2px solid var(--text); border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.brand { line-height: 1.2; }
+.brand-name { font-size: 15px; font-weight: 600; letter-spacing: 0.08em; }
+.brand-sub  { font-size: 10px; color: var(--text3); letter-spacing: 0.1em; }
+
+.filters { display: flex; gap: 5px; flex-wrap: wrap; margin-left: auto; }
+.ftag {
+  font-size: 11px; padding: 5px 13px; border-radius: 20px;
+  border: 1px solid var(--border2); background: transparent;
+  color: var(--text2); cursor: pointer; letter-spacing: 0.03em;
+  transition: all 0.15s; font-family: inherit;
+}
+.ftag.on { background: var(--text); color: #fff; border-color: var(--text); }
+.ftag:hover:not(.on) { background: var(--bg2); }
+
+/* ── NAV ROW ── */
+.nav-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 20px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.nbtn {
+  width: 28px; height: 28px; border-radius: 7px;
+  border: 1px solid var(--border2); background: transparent;
+  color: var(--text); cursor: pointer; font-size: 15px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.12s; font-family: inherit;
+}
+.nbtn:hover { background: var(--bg2); }
+.period { font-size: 13px; font-weight: 500; letter-spacing: 0.03em; }
+
+.stats { display: flex; gap: 18px; margin-left: auto; flex-wrap: wrap; }
+.stat { font-size: 11px; color: var(--text3); }
+.stat b { color: var(--text); font-weight: 500; }
+.stat b.g { color: var(--green); }
+
+/* ── SYNC BAR ── */
+.sync-bar {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 20px;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  font-size: 11px; color: var(--text3);
+}
+.sdot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--green); flex-shrink: 0;
+  animation: pulse 2s infinite;
+}
+.sdot.err   { background: var(--today); animation: none; }
+.sdot.spin  { background: #f0a500; animation: pulse 0.7s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+.sync-btn {
+  margin-left: auto; font-size: 11px; padding: 3px 10px;
+  border-radius: 5px; border: 1px solid var(--border2);
+  background: var(--surface); cursor: pointer; font-family: inherit;
+  color: var(--text2); transition: background 0.12s;
+}
+.sync-btn:hover { background: var(--bg3); }
+
+/* ── BOARD ── */
+.board-wrap { overflow-x: auto; padding: 14px 20px 28px; }
+.board-wrap::-webkit-scrollbar { height: 5px; }
+.board-wrap::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+.board { display: flex; gap: 11px; min-width: max-content; }
+
+/* ── DAY COLUMN ── */
+.dcol { width: 220px; flex-shrink: 0; }
+.dhead {
+  display: flex; align-items: baseline; gap: 7px;
+  padding-bottom: 9px; margin-bottom: 9px;
+  border-bottom: 2px solid var(--text);
+}
+.dhead.today { border-bottom-color: var(--today); }
+.dnum { font-size: 22px; font-weight: 600; line-height: 1; }
+.dhead.today .dnum { color: var(--today); }
+.ddow { font-size: 11px; color: var(--text3); letter-spacing: 0.08em; text-transform: uppercase; }
+.dcnt { margin-left: auto; font-size: 10px; color: var(--text3); }
+
+/* ── CARD ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  padding: 10px 12px 10px;
+  margin-bottom: 8px;
+  transition: border-color 0.12s, box-shadow 0.12s;
+}
+.card:hover { border-color: var(--border2); box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.card.done { opacity: 0.36; }
+
+.badge {
+  display: inline-block;
+  font-size: 9px; padding: 2px 7px; border-radius: 4px;
+  font-weight: 500; letter-spacing: 0.05em; margin-bottom: 6px;
+}
+.b-s { background: var(--s-bg); color: var(--s-c); }
+.b-f { background: var(--f-bg); color: var(--f-c); }
+.b-p { background: var(--p-bg); color: var(--p-c); }
+.b-r { background: var(--r-bg); color: var(--r-c); }
+
+.ctitle { font-size: 12px; line-height: 1.5; color: var(--text); margin-bottom: 7px; }
+.cpromo {
+  font-size: 10px; color: var(--text2); line-height: 1.45;
+  padding: 5px 8px; background: var(--bg2); border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+/* ── CHECKBOXES ── */
+.checks { display: flex; flex-direction: column; gap: 4px; }
+.chk {
+  display: flex; align-items: center; gap: 7px;
+  cursor: pointer; padding: 2px 0; user-select: none;
+}
+.chk:hover .chk-box { border-color: var(--text); }
+.chk-box {
+  width: 15px; height: 15px; border-radius: 4px;
+  border: 1.5px solid var(--border2);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: all 0.12s;
+}
+.chk-box.on { background: var(--text); border-color: var(--text); }
+.chk.saving .chk-box { opacity: 0.4; pointer-events: none; }
+.chk-lbl  { font-size: 10px; color: var(--text2); flex: 1; }
+.chk-role { font-size: 9px; color: var(--text3); flex-shrink: 0; }
+
+/* ── LOADING / ERROR ── */
+.state-screen {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 60px 20px; gap: 12px; width: 100%;
+}
+.spinner {
+  width: 24px; height: 24px;
+  border: 2px solid var(--border2);
+  border-top-color: var(--text);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.state-txt { font-size: 12px; color: var(--text3); }
+.err-box {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 11px; padding: 16px 18px;
+  font-size: 12px; color: var(--text2); line-height: 1.7;
+  max-width: 400px;
+}
+.err-box b { color: var(--text); }
+
+.empty-col { font-size: 11px; color: var(--text3); text-align: center; padding: 20px 0; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo-sq">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <path d="M4 5C4 5 4 11 8 11C12 11 12 5 12 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M12 5L12 11" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M12 5C12 5 12 11 16 11C20 11 20 5 20 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M4 13L8 19L12 13" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M12 13V19" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M20 13V19M16 15.5H20M16 18.5H19" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <div class="brand">
+    <div class="brand-name">UMMA BAR</div>
+    <div class="brand-sub">КОНТЕНТ-ПЛАН МАЙ 2026</div>
+  </div>
+  <div class="filters" id="filters">
+    <button class="ftag on"  onclick="setF('all',this)">Все</button>
+    <button class="ftag"     onclick="setF('story',this)">Истории</button>
+    <button class="ftag"     onclick="setF('feed',this)">Лента</button>
+    <button class="ftag"     onclick="setF('promo',this)">Акции</button>
+    <button class="ftag"     onclick="setF('reel',this)">Reels</button>
+  </div>
+</div>
+
+<div class="nav-row">
+  <button class="nbtn" onclick="shiftW(-1)">‹</button>
+  <div class="period" id="period">—</div>
+  <button class="nbtn" onclick="shiftW(1)">›</button>
+  <div class="stats">
+    <div class="stat">Всего: <b id="st0">—</b></div>
+    <div class="stat">Готово: <b class="g" id="st1">—</b></div>
+    <div class="stat">Прогресс: <b id="st2">—</b></div>
+  </div>
+</div>
+
+<div class="sync-bar">
+  <div class="sdot spin" id="sdot"></div>
+  <span id="stxt">Подключение к Google Sheets...</span>
+  <button class="sync-btn" onclick="loadData()">↻ Обновить</button>
+</div>
+
+<div class="board-wrap" id="board-wrap">
+  <div class="state-screen">
+    <div class="spinner"></div>
+    <div class="state-txt">Загрузка данных...</div>
+  </div>
+</div>
+
+<script>
+const API = 'https://script.google.com/macros/s/AKfycbyJqrrrJ-aUc3709xgA8uO7Fq28bPvH5EnS6FiaTZYhlASzfgl9W3A4JonWIm8YA0E/exec';
+const MR  = ['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'];
+const DW  = ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
+
+const CHECKS = {
+  story: [
+    {key:'m_text',     lbl:'Текст сторис',  role:'СММ'},
+    {key:'m_scenario', lbl:'Сценарий',       role:'СММ'},
+    {key:'o_shot',     lbl:'Снято',          role:'Оп.'},
+    {key:'o_edited',   lbl:'Обработано',     role:'Оп.'},
+    {key:'c_ready',    lbl:'Готово',          role:'КМ'},
+  ],
+  feed: [
+    {key:'m_text',      lbl:'Текст',         role:'СММ'},
+    {key:'o_shot',      lbl:'Снято',         role:'Оп.'},
+    {key:'o_edited',    lbl:'Обработано',    role:'Оп.'},
+    {key:'c_formatted', lbl:'Оформлено',     role:'КМ'},
+    {key:'c_captions',  lbl:'Подписи',       role:'КМ'},
+    {key:'c_ready',     lbl:'Готово',         role:'КМ'},
+  ],
+  promo: [
+    {key:'m_text',  lbl:'Текст акции', role:'Sales'},
+    {key:'c_ready', lbl:'Готово',       role:'КМ'},
+  ],
+  reel: [
+    {key:'m_scenario', lbl:'Сценарий',     role:'СММ'},
+    {key:'o_shot',     lbl:'Снято',        role:'Оп.'},
+    {key:'o_edited',   lbl:'Смонтировано', role:'Оп.'},
+    {key:'c_ready',    lbl:'Готово',        role:'КМ'},
+  ],
+};
+
+function typeKey(fmt) {
+  if (!fmt) return 'story';
+  const f = fmt.toLowerCase();
+  if (f.includes('акция'))                    return 'promo';
+  if (f.includes('reels') || f.includes('рилс')) return 'reel';
+  if (f.includes('пост') || f.includes('карусел')) return 'feed';
+  return 'story';
+}
+function badgeCls(fmt) {
+  return {promo:'b-p', reel:'b-r', feed:'b-f', story:'b-s'}[typeKey(fmt)] || 'b-s';
+}
+
+// Парсим дату из строки вида "Fri May 01 2026 00:00:00 GMT+0300..."
+function parseDate(raw) {
+  if (!raw) return '';
+  const d = new Date(raw);
+  if (!isNaN(d)) {
+    return d.getFullYear() + '-'
+      + String(d.getMonth() + 1).padStart(2,'0') + '-'
+      + String(d.getDate()).padStart(2,'0');
+  }
+  // Fallback "01.05" → "2026-05-01"
+  const s = String(raw).trim();
+  const parts = s.split('.');
+  if (parts.length >= 2)
+    return `2026-${parts[1].padStart(2,'0')}-${parts[0].padStart(2,'0')}`;
+  return s;
+}
+
+let tasks = [], checks = {}, activeF = 'all', weekOff = 0, saving = {};
+
+// ── Sync UI ──
+function setSyncing() { sdot('spin'); stxt('Загрузка...'); }
+function setSyncOk()  { sdot('');    stxt('Синхронизировано с Google Таблицей · ' + nowStr()); }
+function setSyncErr(e){ sdot('err'); stxt('Ошибка: ' + e); }
+function sdot(cls) {
+  const el = document.getElementById('sdot');
+  el.className = 'sdot' + (cls ? ' ' + cls : '');
+}
+function stxt(t) { document.getElementById('stxt').textContent = t; }
+function nowStr() {
+  const d = new Date();
+  return d.getHours() + ':' + String(d.getMinutes()).padStart(2,'0');
+}
+
+// ── Load ──
+async function loadData() {
+  setSyncing();
+  try {
+    const r = await fetch(API + '?t=' + Date.now());
+    const j = await r.json();
+    if (j.ok) {
+      tasks  = (j.tasks  || []).map(t => ({ ...t, date: parseDate(t.date) }));
+      checks = j.checks || {};
+      setSyncOk();
+    } else {
+      setSyncErr(j.error);
+      showErr('Скрипт вернул ошибку: <b>' + j.error + '</b>');
+    }
+  } catch(e) {
+    setSyncErr('нет соединения');
+    showErr('Не удалось подключиться к Google Sheets.<br>Убедись что Web App задеплоен с доступом <b>Все</b>.');
+  }
+  render();
+}
+
+// ── Toggle checkbox ──
+async function toggleCheck(taskId, key) {
+  const cur = !!(checks[taskId] && checks[taskId][key]);
+  const val = !cur;
+  if (!checks[taskId]) checks[taskId] = {};
+  checks[taskId][key] = val;
+  const sk = taskId + '_' + key;
+  saving[sk] = true;
+  render();
+  try {
+    await fetch(API, {
+      method: 'POST',
+      body: JSON.stringify({ taskId, key, value: val }),
+      headers: { 'Content-Type': 'application/json' }
+    });
+    setSyncOk();
+  } catch(e) {
+    setSyncErr('ошибка сохранения');
+  }
+  delete saving[sk];
+  render();
+}
+
+// ── Week navigation ──
+function weekDates() {
+  const now = new Date(), dow = now.getDay() || 7;
+  const mon = new Date(now);
+  mon.setDate(now.getDate() - dow + 1 + weekOff * 7);
+  return Array.from({length:7}, (_, i) => {
+    const d = new Date(mon);
+    d.setDate(mon.getDate() + i);
+    return d;
+  });
+}
+function ds(d) {
+  return d.getFullYear() + '-'
+    + String(d.getMonth()+1).padStart(2,'0') + '-'
+    + String(d.getDate()).padStart(2,'0');
+}
+function todayS() { return ds(new Date()); }
+
+function setF(f, el) {
+  activeF = f;
+  document.querySelectorAll('.ftag').forEach(t => t.classList.remove('on'));
+  el.classList.add('on');
+  render();
+}
+function shiftW(d) { weekOff += d; render(); }
+
+// ── Error screen ──
+function showErr(msg) {
+  document.getElementById('board-wrap').innerHTML =
+    `<div class="state-screen"><div class="err-box">${msg}</div></div>`;
+}
+
+// ── SVG checkmark ──
+const TICK = `<svg width="9" height="8" viewBox="0 0 9 8" fill="none">
+  <path d="M1 3.5L3.5 6.5L8 1" stroke="white" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>`;
+
+// ── Render ──
+function render() {
+  const days = weekDates();
+  const f = days[0], l = days[6];
+  document.getElementById('period').textContent =
+    `${f.getDate()} ${MR[f.getMonth()]} — ${l.getDate()} ${MR[l.getMonth()]} ${l.getFullYear()}`;
+
+  const filtered = tasks.filter(t => activeF === 'all' || typeKey(t.fmt) === activeF);
+  let tot = 0, dn = 0;
+  let html = '<div class="board">';
+
+  days.forEach(day => {
+    const dateS = ds(day);
+    const isT   = dateS === todayS();
+    const dayT  = filtered.filter(t => t.date === dateS);
+    tot += dayT.length;
+
+    let cards = '';
+    if (!dayT.length) {
+      cards = '<div class="empty-col">—</div>';
+    } else {
+      dayT.forEach(t => {
+        const tk   = typeKey(t.fmt);
+        const cl   = CHECKS[tk] || [];
+        const doneC = cl.filter(c => checks[t.id] && checks[t.id][c.key]).length;
+        const allD  = cl.length > 0 && doneC === cl.length;
+        if (allD) dn++;
+
+        const chks = cl.map(c => {
+          const on = !!(checks[t.id] && checks[t.id][c.key]);
+          const sv = saving[t.id + '_' + c.key];
+          return `<div class="chk${sv?' saving':''}" onclick="toggleCheck(${t.id},'${c.key}')">
+            <div class="chk-box${on?' on':''}">${on ? TICK : ''}</div>
+            <span class="chk-lbl">${c.lbl}</span>
+            <span class="chk-role">${c.role}</span>
+          </div>`;
+        }).join('');
+
+        const promo = (t.promo || '').trim();
+        cards += `<div class="card${allD?' done':''}">
+          <span class="badge ${badgeCls(t.fmt)}">${t.fmt || '—'}</span>
+          <div class="ctitle">${t.title || '—'}</div>
+          ${promo ? `<div class="cpromo">🏷 ${promo}</div>` : ''}
+          <div class="checks">${chks}</div>
+        </div>`;
+      });
+    }
+
+    html += `<div class="dcol">
+      <div class="dhead${isT?' today':''}">
+        <div class="dnum">${day.getDate()}.${String(day.getMonth()+1).padStart(2,'0')}</div>
+        <div class="ddow">${DW[day.getDay()]}</div>
+        <div class="dcnt">${dayT.length} зад.</div>
+      </div>
+      ${cards}
+    </div>`;
+  });
+
+  html += '</div>';
+  document.getElementById('board-wrap').innerHTML = html;
+  document.getElementById('st0').textContent = tot;
+  document.getElementById('st1').textContent = dn;
+  document.getElementById('st2').textContent = tot ? Math.round(dn / tot * 100) + '%' : '0%';
+}
+
+// Старт
+loadData();
+setInterval(loadData, 120000);
+</script>
+</body>
+</html>
